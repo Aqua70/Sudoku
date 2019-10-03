@@ -20,8 +20,8 @@ public class Main
 			+ "150078030"
 			+ "007039800"
 			+ "804100006";
-	
-/*Easy:
+
+	/*Easy:
 	  = ""
 			+ "500007604"
 			+ "002840300"
@@ -78,14 +78,40 @@ ans:
 		check(5, 7);
 		check(8, 8);
 
-
+		printPuzzle(puzzle);
 	}
 
 	private void check(int xPos, int yPos)
 	{
 		if (amount <= 0)
 			return;
-		
+
+
+
+		checkBox(xPos, yPos);
+		checkRow(yPos);
+		checkColumn(xPos);
+
+
+
+
+
+	}
+
+	private void checkSpecific(int xPos, int yPos, int number)
+	{
+		if (amount <= 0)
+			return;
+
+
+		checkSpecificBox(xPos, yPos, number);
+		checkSpecificRow(yPos, number);
+		checkSpecificColumn(xPos, number);
+
+	}
+
+	private void checkSpecificBox(int xPos, int yPos, int number)
+	{
 		int topLeftx = xPos;
 		int topLefty = yPos;
 		while (topLeftx % 3 != 0)
@@ -93,26 +119,48 @@ ans:
 		while (topLefty % 3 != 0)
 			topLefty--;
 
-		checkBox(topLeftx, topLefty);
-		checkRow(yPos);
-		checkColumn(xPos);
-
-
-		System.out.println(amount);
-		printPuzzle(puzzle);
-
-
-
-	}
-	
-	private void checkSpecific(int num)
-	{
-
+		for (int i = topLefty; i < topLefty + 3; i++)
+		{
+			for (int j = topLeftx; j < topLeftx + 3; j++)
+			{
+				if (puzzle[j][i] == 0)
+				{
+					removePoss(j, i, number);
+				}
+			}
+		}
 	}
 
-
-	private void checkBox(int topLeftx, int topLefty)
+	private void checkSpecificColumn(int xPos, int number)
 	{
+		for (int i = 0; i < LENGTH; i++)
+		{
+			if (puzzle[xPos][i] == 0)
+			{
+				removePoss(xPos, i, number);
+			}
+		}
+	}
+
+	private void checkSpecificRow(int yPos, int number)
+	{
+		for (int j = 0; j < LENGTH; j++)
+		{
+			if (puzzle[j][yPos] == 0)
+			{
+				removePoss(j, yPos, number);
+			}
+		}
+	}
+
+	private void checkBox(int xPos, int yPos)
+	{
+		int topLeftx = xPos;
+		int topLefty = yPos;
+		while (topLeftx % 3 != 0)
+			topLeftx--;
+		while (topLefty % 3 != 0)
+			topLefty--;
 		ArrayList<Integer> tempNotPoss = new ArrayList<Integer>();
 
 		// Finds all not possibilities inside 3x3
@@ -162,7 +210,7 @@ ans:
 			}
 		}
 	}
-	
+
 
 
 	private void checkRow(int yPos)
@@ -185,30 +233,30 @@ ans:
 			}
 		}
 	}
-	
+
 	private void removePoss(int xPos, int yPos, int number)
 	{
-		
-	possibilities[xPos][yPos].replace(number-1, number, " ");
-	if (possibilities[xPos][yPos].toString().trim().length() == 1)
-	{
-		int finalPoss = Integer.parseInt(possibilities[xPos][yPos].toString().trim());
-		puzzle[xPos][yPos] = finalPoss;
-		possibilities[xPos][yPos].replace(finalPoss - 1, finalPoss, " ");
-		amount--;
-		
-		if (amount <= 0)
-			return;
-		
-		check(xPos, yPos);
-	}
+
+		possibilities[xPos][yPos].replace(number-1, number, " ");
+		if (possibilities[xPos][yPos].toString().trim().length() == 1)
+		{
+			int finalPoss = Integer.parseInt(possibilities[xPos][yPos].toString().trim());
+			puzzle[xPos][yPos] = finalPoss;
+			possibilities[xPos][yPos].replace(finalPoss - 1, finalPoss, " ");
+			amount--;
+
+			if (amount <= 0)
+				return;
+
+			checkSpecific(xPos, yPos, finalPoss);
+		}
 	}
 	private void printArray (int[] a)
 	{
 		for (int i = 0; i < a.length; i++)
 			System.out.println(a[i]);
 	}
-	
+
 	private void printPuzzle (int[][] a)
 	{
 		for (int i = 0; i < LENGTH; i++)
