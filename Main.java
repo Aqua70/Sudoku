@@ -20,6 +20,29 @@ public class Main
 			+ "150078030"
 			+ "007039800"
 			+ "804100006";
+	
+/*Easy:
+	  = ""
+			+ "500007604"
+			+ "002840300"
+			+ "040960015"
+			+ "070001920"
+			+ "020000060"
+			+ "085300040"
+			+ "150078030"
+			+ "007039800"
+			+ "804100006";
+ans:			
+593217684
+612845379
+748963215
+476581923
+321794568
+985326147
+159678432
+267439851
+834152796
+	 */
 
 	public static void main(String[] args) 
 	{
@@ -111,24 +134,11 @@ public class Main
 				{
 					for (int number : tempNotPoss)
 					{
-						possibilities[j][i].replace(number-1, number, " ");
-					}
-					if (possibilities[j][i].toString().trim().length() == 1)
-					{
-						puzzle[j][i] = Integer.parseInt(possibilities[j][i].toString().trim());
-						amount--;
-						
-						if (amount <= 0)
-							return;
-						
-						check(j,i);
+						removePoss(j, i, number);
 					}
 				}
 			}
 		}
-
-
-
 
 	}
 
@@ -147,21 +157,13 @@ public class Main
 			{
 				for (int number : tempNotPoss)
 				{
-					possibilities[xPos][i].replace(number-1, number, " ");
-				}
-				if (possibilities[xPos][i].toString().trim().length() == 1)
-				{
-					puzzle[xPos][i] = Integer.parseInt(possibilities[xPos][i].toString().trim());
-					amount--;
-					
-					if (amount <= 0)
-						return;
-					
-					check(xPos,i);
+					removePoss(xPos, i, number);
 				}
 			}
 		}
 	}
+	
+
 
 	private void checkRow(int yPos)
 	{
@@ -178,22 +180,29 @@ public class Main
 			{
 				for (int number : tempNotPoss)
 				{
-					possibilities[j][yPos].replace(number-1, number, " ");
-					if (possibilities[j][yPos].toString().trim().length() == 1)
-					{
-						puzzle[j][yPos] = Integer.parseInt(possibilities[j][yPos].toString().trim());
-						amount--;
-						
-						if (amount <= 0)
-							return;
-						
-						check(j,yPos);
-					}
+					removePoss(j, yPos, number);
 				}
 			}
 		}
 	}
-
+	
+	private void removePoss(int xPos, int yPos, int number)
+	{
+		
+	possibilities[xPos][yPos].replace(number-1, number, " ");
+	if (possibilities[xPos][yPos].toString().trim().length() == 1)
+	{
+		int finalPoss = Integer.parseInt(possibilities[xPos][yPos].toString().trim());
+		puzzle[xPos][yPos] = finalPoss;
+		possibilities[xPos][yPos].replace(finalPoss - 1, finalPoss, " ");
+		amount--;
+		
+		if (amount <= 0)
+			return;
+		
+		check(xPos, yPos);
+	}
+	}
 	private void printArray (int[] a)
 	{
 		for (int i = 0; i < a.length; i++)
